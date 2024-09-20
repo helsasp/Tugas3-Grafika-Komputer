@@ -1,4 +1,6 @@
 function main() {
+
+    // canvas
     const canvas = document.querySelector("#canvas");
     const gl = canvas.getContext("webgl");
 
@@ -71,6 +73,7 @@ function main() {
 
     requestAnimationFrame(drawScene);
 
+        // draw 3d
     function drawScene(time) {
         time *= 0.001;
         const deltaTime = time - then;
@@ -109,7 +112,7 @@ function main() {
         matrix = m4.yRotate(matrix, modelYRotationRadians);
         gl.uniformMatrix4fv(matrixLocation, false, matrix);
 
-        // Bind textures to correct texture units
+        // Bind textures 
         for (let i = 0; i < textures.length; i++) {
             if (textures[i]) {
                 gl.activeTexture(gl.TEXTURE0 + i);
@@ -118,7 +121,7 @@ function main() {
             }
         }
 
-        // Draw each face with the correct texture
+        // Draw each face 
         for (let faceIndex = 0; faceIndex < 6; faceIndex++) {
             gl.uniform1i(faceIndexLocation, faceIndex);
             gl.drawArrays(gl.TRIANGLES, faceIndex * 6, 6);

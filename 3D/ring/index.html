@@ -11,7 +11,7 @@
     <canvas width="1550" height="700" id="my_Canvas"></canvas>
 
     <script>
-        /*============= Creating a canvas =================*/
+        //Canvas
         var canvas = document.getElementById('my_Canvas');
         var gl = canvas.getContext('webgl');
 
@@ -19,7 +19,7 @@
             console.error("WebGL not supported");
         }
 
-        /*============ Defining and storing the geometry =========*/
+        //Geometry
 
         var innerRadius = 0.5;
         var outerRadius = 1.0;
@@ -48,11 +48,11 @@
 
                 vertices.push(x, y, z);
 
-                // Create a gradient color for the donut
+                // Ring gradient color
                 var color = [
                     1.0, // Red
-                    0.8 + 0.2 * (u + v) / 2, // Green (varies for a more dynamic look)
-                    0.6 + 0.4 * (1 - Math.abs(sinPhi)) // Blue (glazed appearance)
+                    0.8 + 0.2 * (u + v) / 2, // Green 
+                    0.6 + 0.4 * (1 - Math.abs(sinPhi)) // Blue 
                 ];
                 colors.push(...color);
 
@@ -66,22 +66,22 @@
             }
         }
 
-        // Create and store data into vertex buffer
+        // store vertex buffer
         var vertex_buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, vertex_buffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
 
-        // Create and store data into color buffer
+        //  store data into color buffer
         var color_buffer = gl.createBuffer();
         gl.bindBuffer(gl.ARRAY_BUFFER, color_buffer);
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
 
-        // Create and store data into index buffer
+        //  store data into index buffer
         var index_buffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
 
-        /*=================== Shaders =========================*/
+        // shaders
 
         var vertCode = `
             attribute vec3 position;
@@ -151,7 +151,7 @@
 
         view_matrix[14] = view_matrix[14] - 6;
 
-        /*==================== Rotation ====================*/
+        // rotate
 
         function rotateZ(m, angle) {
             var c = Math.cos(angle);
@@ -195,7 +195,7 @@
             m[10] = c * m[10] - s * mv8;
         }
 
-        /*================= Drawing ===========================*/
+        // draw
         var time_old = 0;
         var animate = function (time) {
             var dt = time - time_old;

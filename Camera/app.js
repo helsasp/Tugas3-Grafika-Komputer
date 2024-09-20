@@ -123,7 +123,7 @@ if (keys['76'] || keys['82']) { // L for left, R for right
     ang += deltaTime * turnSpeed * direction;
 }
 
-if (keys['88'] || keys['89']) { // X for roll left, Y for roll right
+if (keys['88'] || keys['89']) { // X for roll right, Y for roll left
     const direction = keys['88'] ? 1 : -1;
     roll += deltaTime * turnSpeed * direction;
 }

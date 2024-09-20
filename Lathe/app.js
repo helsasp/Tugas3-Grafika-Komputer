@@ -1,5 +1,6 @@
 "use strict";
 
+// titik 3d
 const svg = "M 150 30 C 130 60 170 70 150 90 C 140 75 160 85 155 100 C 160 115 140 120 140 130 C 145 125 155 135 150 140 C 145 145 135 135 130 140 C 125 145 135 155 140 160 C 145 165 160 160 165 150 C 170 140 150 135 155 130 C 160 125 170 120 165 115 C 160 110 140 105 145 95 C 150 85 160 90 155 80 C 150 70 130 80 135 70 C 140 60 130 50 150 30";
 
 
@@ -7,7 +8,7 @@ function main() {
   const opt = getQueryParams();
   const curvePoints = parseSVGPath(svg, { xFlip: true });
 
-  // Get A WebGL context
+  // webgl
   /** @type {HTMLCanvasElement} */
   const canvas = document.querySelector("canvas");
   const gl = canvas.getContext("webgl");
@@ -54,8 +55,7 @@ function main() {
     };
   }
 
-  // used to force the locations of attributes so they are
-  // the same across programs
+ 
   const attributes = [ 'a_position', 'a_texcoord', 'a_normal' ];
   // setup GLSL program
   const programInfos = [
@@ -83,30 +83,29 @@ function main() {
   function render() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas, window.devicePixelRatio);
 
-    // Tell WebGL how to convert from clip space to pixels
+    
     gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
 
     gl.enable(gl.DEPTH_TEST);
 
-    // Clear the canvas AND the depth buffer.
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    // Compute the projection matrix
+    // projection matrix
     const fieldOfViewRadians = Math.PI * .25;
     const aspect = gl.canvas.clientWidth / gl.canvas.clientHeight;
     projectionMatrix =
         m4.perspective(fieldOfViewRadians, aspect, 1, 2000);
 
-    // Compute the camera's matrix using look at.
+    // camera matrix
     const midY = lerp(extents.min[1], extents.max[1], .5);
     const sizeToFitOnScreen = (extents.max[1] - extents.min[1]) * .6;
     const distance = sizeToFitOnScreen / Math.tan(fieldOfViewRadians * .5);
     const cameraPosition = [0, midY, distance];
     const target = [0, midY, 0];
-    const up = [0, -1, 0];  // we used 2d points as input which means orientation is flipped
+    const up = [0, -1, 0];  // 2d points
     const cameraMatrix = m4.lookAt(cameraPosition, target, up);
 
-    // Make a view matrix from the camera matrix.
+  
     const viewMatrix = m4.inverse(cameraMatrix);
 
     const viewProjectionMatrix = m4.multiply(projectionMatrix, viewMatrix);
@@ -114,14 +113,14 @@ function main() {
     const programInfo = programInfos[data.mode];
     gl.useProgram(programInfo.program);
 
-    // Setup all the needed attributes.
-    // calls gl.bindBuffer, gl.enableVertexAttribArray, gl.vertexAttribPointer for each attribute
+    // Setup attributes.
+    
     webglUtils.setBuffersAndAttributes(gl, programInfo, bufferInfo);
 
     const worldViewProjection = m4.multiply(viewProjectionMatrix, worldMatrix);
 
     // Set the uniforms
-    // calls gl.uniformXXX, gl.activeTexture, gl.bindTexture
+   
     webglUtils.setUniforms(programInfo, {
       u_matrix: worldViewProjection,
       u_worldViewProjection: worldViewProjection,
@@ -134,7 +133,6 @@ function main() {
       u_texture: texInfo.texture,
     });
 
-    // calls gl.drawArrays or gl.drawElements.
     webglUtils.drawBufferInfo(gl, bufferInfo, data.triangles ? gl.TRIANGLE : gl.LINES);
   }
 
@@ -155,7 +153,7 @@ function main() {
     };
   }
 
-  // get the points from an SVG path. assumes a continous line
+  // get the points from an SVG 
   function parseSVGPath(svg, opt) {
     const points = [];
     let delta = false;
@@ -316,7 +314,7 @@ function main() {
     const outPoints = newPoints || [];
     if (flatness(points, offset) < tolerance) {
 
-      // just add the end points of this curve
+      
       outPoints.push(points[offset + 0]);
       outPoints.push(points[offset + 3]);
 
@@ -532,22 +530,7 @@ function main() {
       return newNdx;
     }
 
-    // We need to figure out the shared vertices.
-    // It's not as simple as looking at the faces (triangles)
-    // because for example if we have a standard cylinder
-    //
-    //
-    //      3-4
-    //     /   \
-    //    2     5   Looking down a cylinder starting at S
-    //    |     |   and going around to E, E and S are not
-    //    1     6   the same vertex in the data we have
-    //     \   /    as they don't share UV coords.
-    //      S/E
-    //
-    // the vertices at the start and end do not share vertices
-    // since they have different UVs but if you don't consider
-    // them to share vertices they will get the wrong normals
+   
 
     const vertIndices = [];
     for (let i = 0; i < numVerts; ++i) {
@@ -572,11 +555,7 @@ function main() {
       }
     }
 
-    // now go through every face and compute the normals for each
-    // vertex of the face. Only include faces that aren't more than
-    // maxAngle different. Add the result to arrays of newPositions,
-    // newTexcoords and newNormals, discarding any vertices that
-    // are the same.
+
     tempVerts = {};
     tempVertNdx = 0;
     const newPositions = [];

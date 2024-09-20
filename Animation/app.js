@@ -1,6 +1,8 @@
 "use strict";
 
 function main() {
+
+    // webgl canvas
     var canvas = document.querySelector("#canvas");
     var gl = canvas.getContext("webgl");
     if (!gl) {
@@ -28,12 +30,12 @@ function main() {
         return d * Math.PI / 180;
     }
 
-    var translation = [100, 0, 0]; // Adjusted z translation
+    var translation = [100, 0, 0]; // z translate
     var rotation = [degToRad(40), degToRad(25), degToRad(325)];
-    var scale = [100, 100, 100]; // Increased scale for the cube
+    var scale = [100, 100, 100]; // cube scale
 
     drawScene();
-
+    // slider
     webglLessonsUI.setupSlider("#Translation-X", { value: translation[0], slide: updatePosition(0), max: gl.canvas.width });
     webglLessonsUI.setupSlider("#Translation-Y", { value: translation[1], slide: updatePosition(1), max: gl.canvas.height });
     webglLessonsUI.setupSlider("#Translation-Z", { value: translation[2], slide: updatePosition(2), max: gl.canvas.height });
@@ -158,6 +160,7 @@ var m4 = {
             b30 * a03 + b31 * a13 + b32 * a23 + b33 * a33,
         ];
     },
+    // Translasi
     translate: function(m, tx, ty, tz) {
         return m4.multiply(m, [
             1, 0, 0, 0,
@@ -166,6 +169,7 @@ var m4 = {
             tx, ty, tz, 1,
         ]);
     },
+    // Rotasi X
     xRotate: function(m, angle) {
         var cos = Math.cos(angle);
         var sin = Math.sin(angle);
@@ -176,6 +180,7 @@ var m4 = {
             0, 0, 0, 1,
         ]);
     },
+    // Rotasi Y
     yRotate: function(m, angle) {
         var cos = Math.cos(angle);
         var sin = Math.sin(angle);
@@ -186,6 +191,7 @@ var m4 = {
             0, 0, 0, 1,
         ]);
     },
+    // Rotasi Z
     zRotate: function(m, angle) {
         var cos = Math.cos(angle);
         var sin = Math.sin(angle);
@@ -196,6 +202,7 @@ var m4 = {
             0, 0, 0, 1,
         ]);
     },
+    // Scalling xyz
     scale: function(m, sx, sy, sz) {
         return m4.multiply(m, [
             sx, 0, 0, 0,
@@ -206,7 +213,7 @@ var m4 = {
     }
 };
 
-function setGeometry(gl) {
+function setGeometry(gl) { // titik kubus
     gl.bufferData(
         gl.ARRAY_BUFFER,
         new Float32Array([

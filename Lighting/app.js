@@ -1,21 +1,20 @@
 "use strict";
 
 function main() {
-  // Get a WebGL context
+  // webgl canvas
   var canvas = document.querySelector("#canvas");
   var gl = canvas.getContext("webgl");
   if (!gl) {
     return;
   }
 
-  // Setup GLSL program
+  
   var program = webglUtils.createProgramFromScripts(gl, ["vertex-shader-3d", "fragment-shader-3d"]);
 
-  // Look up where the vertex data needs to go.
   var positionLocation = gl.getAttribLocation(program, "a_position");
   var normalLocation = gl.getAttribLocation(program, "a_normal");
 
-  // Lookup uniforms
+
   var worldViewProjectionLocation = gl.getUniformLocation(program, "u_worldViewProjection");
   var worldInverseTransposeLocation = gl.getUniformLocation(program, "u_worldInverseTranspose");
   var colorFrontLocation = gl.getUniformLocation(program, "u_colorFront");
@@ -31,12 +30,12 @@ function main() {
   var viewWorldPositionLocation = gl.getUniformLocation(program, "u_viewWorldPosition");
   var worldLocation = gl.getUniformLocation(program, "u_world");
 
-  // Create a buffer to put positions in
+  // buffer postion
   var positionBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
   setGeometry(gl);
 
-  // Create a buffer to put normals in
+  // buffer normal
   var normalBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, normalBuffer);
   setNormals(gl);
@@ -59,32 +58,37 @@ function main() {
 
   drawScene();
 
-  // Setup UI
+  // Setup ui slider
   webglLessonsUI.setupSlider("#Limit", {value: radToDeg(limit), slide: updateLimit, min: 0, max: 180});
   webglLessonsUI.setupSlider("#Light-X-Rotation", {value: lightRotationX, slide: updatelightRotationX, min: -2, max: 2, precision: 2, step: 0.001});
   webglLessonsUI.setupSlider("#Light-Y-Rotation", {value: lightRotationY, slide: updatelightRotationY, min: -2, max: 2, precision: 2, step: 0.001});
    webglLessonsUI.setupSlider("#Cube-Rotation", {value: radToDeg(fRotationRadians), slide: updateRotation, min: -360, max: 360});
 
+   // rotation cube
   function updateRotation(event, ui) {
     fRotationRadians = degToRad(ui.value);
     drawScene();
   }
 
+  // light rotation x
   function updatelightRotationX(event, ui) {
     lightRotationX = ui.value;
     drawScene();
   }
-
+  
+  // light rotation y
   function updatelightRotationY(event, ui) {
     lightRotationY = ui.value;
     drawScene();
   }
 
+  // light limit
   function updateLimit(event, ui) {
     limit = degToRad(ui.value);
     drawScene();
   }
 
+  // draw the cube in canvas
   function drawScene() {
     webglUtils.resizeCanvasToDisplaySize(gl.canvas);
 
@@ -151,7 +155,7 @@ function main() {
   }
 }
 
-// Fill the buffer with the values that define a cube.
+// cube geometry
 function setGeometry(gl) {
   var scale = 10; // Increased scaling factor
   var positions = new Float32Array([
@@ -207,7 +211,7 @@ function setGeometry(gl) {
   gl.bufferData(gl.ARRAY_BUFFER, positions, gl.STATIC_DRAW);
 }
 
-// Fill the buffer with the normals for the cube.
+// cube normals
 function setNormals(gl) {
   var normals = new Float32Array([
     // Front face
